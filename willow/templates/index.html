@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Econ Experiment</title>
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            namespace = '/test'; // change to an empty string to use the global namespace
+
+            // the socket.io documentation recommends sending an explicit package upon connection
+            // this is specially important when using the global namespace
+            var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+
+
+            socket.on('pause_experiment', function(msg) {
+                if (msg['data'] == "pause") {
+                    $('#screen').css({ opacity: 0.7, 'width':$(document).width(),'height':$(document).height()});
+                    $('body').css({'overflow':'hidden'});
+                    $('#box').css({'display': 'block'});
+                }
+
+                //else if (msg['data'] == "continue" ) {
+                //    $(this).css('display', 'none');
+                //    $('#screen').css('display', 'none');
+                //}
+
+
+            });
+
+
+            socket.on('connect', function() {
+                socket.emit('my event', {data: 'I\'m connected!'});
+            });
+
+            // event handler for server sent data
+            // the data is displayed in the "Received" section of the page
+            socket.on('my response', function(msg) {
+                $('#log').append('<br>Received #' + msg.count + ': ' + msg.data);
+            });
+
+            socket.on('direct_users', function(msg) {
+                $("body").html(msg.data);
+                alert(msg.data);
+                $('#log').append('<br>Received #' + msg.count + ': ' + msg.data);
+            });
+
+
+            // handlers for the different forms in the page
+            // these send data to the server in a variety of ways
+            $('form#emit').submit(function(event) {
+                socket.emit('my event', {data: $('#emit_data').val()});
+                return false;
+            });
+            $('form#broadcast').submit(function(event) {
+                socket.emit('my broadcast event', {data: $('#broadcast_data').val()});
+                return false;
+            });
+            $('form#join').submit(function(event) {
+                socket.emit('join', {room: $('#join_room').val()});
+                return false;
+            });
+            $('form#leave').submit(function(event) {
+                socket.emit('leave', {room: $('#leave_room').val()});
+                return false;
+            });
+            $('form#send_room').submit(function(event) {
+                socket.emit('my room event', {room: $('#room_name').val(), data: $('#room_data').val()});
+                return false;
+            });
+        });
+    </script>
+
+    <style>
+        #box
+            {
+                width: 150px;
+                height: 150px;
+                background: #FFF;
+                text-align: center;
+                position: absolute;
+                margin-left: -75px;
+                margin-top: -75px;
+                left: 50%;
+                top: 50%;
+                z-index: 20;
+                display: none;
+            }
+
+        #screen
+        {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #000;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id='box'>
+    Experiment Paused
+</div>
+
+<div id='screen'>
+</div>
+
+
+
+    Welcome to an experiment!
+
+
+</body>
+</html>
