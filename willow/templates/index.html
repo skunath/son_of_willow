@@ -8,12 +8,17 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
-            namespace = '/test'; // change to an empty string to use the global namespace
+            // we need to store the final subject_id here so we can use it throughout the experiment
+            subject_id = '{{ subject_id }}';
+
+            // we'll operate in the subject_space for subject messages
+            namespace = '/subject_space';
 
             // the socket.io documentation recommends sending an explicit package upon connection
             // this is specially important when using the global namespace
             var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
 
+            document.socket = socket;
 
             socket.on('pause_experiment', function(msg) {
                 if (msg['data'] == "pause") {
@@ -22,13 +27,32 @@
                     $('#box').css({'display': 'block'});
                 }
 
-                //else if (msg['data'] == "continue" ) {
-                //    $(this).css('display', 'none');
-                //    $('#screen').css('display', 'none');
-                //}
+                else if (msg['data'] == "continue" ) {
+                    $('#screen').css({ opacity: 0.0, 'width':0,'height':0});
+                    $('#box').css({'display': 'none'});
+
+                }
 
 
             });
+
+
+
+
+            // this is the area where the user will respond and ask for the first template to load and present.
+            socket.on('start_experiment', function(msg) {
+                socket.emit('initialize_experiment_window', {subject_id: subject_id});
+                //socket.emit('request_current_screen', {data: subject_id});
+            });
+
+
+
+            // this is the area where the user will respond and ask for the first template to load and present.
+            socket.on('present_stage_screen', function(msg) {
+                stage_screen = msg["stage_screen"]
+                $("#experiment_content").html(stage_screen)
+            });
+
 
 
             socket.on('connect', function() {
@@ -70,6 +94,8 @@
                 socket.emit('my room event', {room: $('#room_name').val(), data: $('#room_data').val()});
                 return false;
             });
+
+
         });
     </script>
 
@@ -110,9 +136,9 @@
 </div>
 
 
-
+<div id="experiment_content">
     Welcome to an experiment!
-
+</div>
 
 </body>
 </html>

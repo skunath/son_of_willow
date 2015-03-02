@@ -1,0 +1,137 @@
+<script>
+    // this is the area where the user will respond and ask for the first template to load and present.
+    document.socket.on('interface_message', function(msg) {
+        //stage_screen = msg["stage_screen"]
+        //$("#experiment_content").html(stage_screen)
+
+        alert(msg);
+
+    });
+
+
+
+    // this is where we need to register button clicks with the form submit thing
+    $('#accept_bid').click(function(event) {
+        document.socket.emit('interface_action', {data: "test bid"});
+        return false;
+    });
+
+    $('#confirm_contract').click(function(event) {
+        document.socket.emit('interface_action', {data: "test confirm"});
+        return false;
+    });
+
+    $('#enter_offer').click(function(event) {
+        document.socket.emit('interface_action', {data: "test offer"});
+        return false;
+    });
+
+
+</script>
+
+<div class="row">
+    <div class="col-md-12">A double auction experiment</div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">Record Sheet for a trader.</div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+        <table class="table table-bordered">
+
+            <! -- Header Information for the trader screen -->
+            <tr>
+                <td>Record sheet for trader</td>
+                <td>Trading Period</td>
+                <td>Trading Period</td>
+                <td>Trading Period</td>
+                <td>Trading Period</td>
+                <td>Trading Period</td>
+            </tr>
+
+            <tr>
+                <td>Trader 1</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+            </tr>
+
+            <! -- Beginning of live trading display -->
+
+            <tr>
+                <td>Unit 1 selling price</td>
+                <td><span id="unit_1_selling_price_period_1"></span></td>
+                <td><span id="unit_1_selling_price_period_2"></span></td>
+                <td><span id="unit_1_selling_price_period_3"></span></td>
+                <td><span id="unit_1_selling_price_period_4"></span></td>
+                <td><span id="unit_1_selling_price_period_5"></span></td>
+            </tr>
+
+            <tr>
+                <td>Unit 1 purchase price</td>
+                <td><span id="unit_1_purchase_price_period_1"></span></td>
+                <td><span id="unit_1_purchase_price_period_2"></span></td>
+                <td><span id="unit_1_purchase_price_period_3"></span></td>
+                <td><span id="unit_1_purchase_price_period_4"></span></td>
+                <td><span id="unit_1_purchase_price_period_5"></span></td>
+            </tr>
+
+            <tr>
+                <td>Unit 1 Profit</td>
+                <td><span id="unit_1_profit_period_1"></span></td>
+                <td><span id="unit_1_profit_period_2"></span></td>
+                <td><span id="unit_1_profit_period_3"></span></td>
+                <td><span id="unit_1_profit_period_4"></span></td>
+                <td><span id="unit_1_profit_period_5"></span></td>
+            </tr>
+
+        </table>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        Current Inventory=<span id="current_inventory"></span>, unit life=<span id="unit_life"></span>, unit scrap value=<span id="unit_scrap_value"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        Working capital = <span id="working_capital"></span>, inventory cost scrap = <span id="inventory_cost_scrap"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        A BUYER BIDS <span id="buyer_bids"></span> -- A SELLER OFFERS <span id="seller_offers"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-default" type="submit" id="enter_offer">Enter Offer</button>
+
+        <div class="radio">
+          <label>
+            <input type="radio" name="optionsRadios" id="buy_offer" value="buy" checked>
+            Buy
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="optionsRadios" id="sell_offer" value="option2">
+            Sell
+          </label>
+        </div>
+
+        <div class="form-group">
+            <label for="offer_amount">Offer Amount</label>
+            <input type="text" class="form-control" id="offer_amount" placeholder="1">
+          </div>
+
+        <button class="btn btn-default" type="submit" id="accept_bid">Accept Bid</button>
+
+        <button class="btn btn-default" type="submit" id="confirm_contract">Confirm Contract</button>
+    </div>
+</div>
