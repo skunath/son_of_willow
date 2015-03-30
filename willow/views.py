@@ -83,8 +83,11 @@ def initialize_experiment_window(message):
 @socketio.on('interface_action', namespace='/subject_space')
 def interface_action(message):
     print "received a message"
-    emit('interface_message',
-         {'data': "testing this out..."})
+
+    experiment.user_action_received(message, emit)
+    #emit('interface_message', {'data': "testing this out..."})
+
+
 
 
 

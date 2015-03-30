@@ -17,8 +17,12 @@ class Experiment(object):
 
         # TODO: Need this be optional?
         self.rounds_remaining = []
+        self.emitter = None
 
 
+    def set_emitter(self, emitter):
+        if self.emitter == None:
+            self.emitter = emitter
 
     # method to determine whether the experiment is actually running
     def is_running(self):
@@ -57,6 +61,9 @@ class Experiment(object):
         return self.total_rounds
 
 
+    def log_action(self, action):
+        self.emitter('log_message', {'signal':'connected','data': 1}, namespace='/admin_control')
+
     # in some instances will we need to push down whole page updates?
     # probably should have code here for just jquery based updates.0
     def prepare_stage_for_subject(self, subject_id):
@@ -73,4 +80,6 @@ class Experiment(object):
         return output
 
 
+    def user_action_received(self, message, emit_method):
+        print "Need to be overloaded...."
 

@@ -39,10 +39,11 @@
                     // Append to the subject list the new user
                     $('#subject_list').append("<a class='list-group-item'>" + msg["data"] + "</a>");
                 }
-
-
             });
 
+            socket.on('log_message', function(msg) {
+                $('#log_table').append("<tr><td>time</td><td>message</td><td>source</td></tr>");
+            });
 
             // handlers for the different forms in the page
             // these send data to the server in a variety of ways
@@ -112,7 +113,18 @@
         </div><!-- /.col-sm-4 -->
 
       <div class="col-sm-4">
+          <table>
+              <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Message</th>
+                    <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="log_table">
 
+              </tbody>
+          </table>
       </div><!-- /.col-sm-4 -->
 
       <div class="col-sm-4">

@@ -21,5 +21,7 @@ app.config['SECRET_KEY'] = 'secret!'
 
 
 socketio = SocketIO(app)
+experiment.set_emitter(socketio.emit)
+
 import willow.views
 import willow.admin_views

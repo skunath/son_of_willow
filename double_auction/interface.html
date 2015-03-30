@@ -4,7 +4,20 @@
         //stage_screen = msg["stage_screen"]
         //$("#experiment_content").html(stage_screen)
 
-        alert(msg);
+        if (msg["received_action"] == "post_bid") {
+            offer_id = msg["offer_id"];
+            offer_type = msg["offer_type"];
+            offer_amount = msg["offer_amount"];
+            offer_message = "<span id='" + offer_id + "'>"
+            offer_message += offer_amount
+            offer_message += "</span>"
+            if (offer_type == "sell") {
+                $('#seller_offers').html(offer_message);
+            }
+            else {
+                $('#buyer_bids').html(offer_message);
+            }
+        }
 
     });
 
@@ -12,17 +25,17 @@
 
     // this is where we need to register button clicks with the form submit thing
     $('#accept_bid').click(function(event) {
-        document.socket.emit('interface_action', {data: "test bid"});
+        document.socket.emit('interface_action', {user: document.subject_id, action: "accept_bid"});
         return false;
     });
 
     $('#confirm_contract').click(function(event) {
-        document.socket.emit('interface_action', {data: "test confirm"});
+        document.socket.emit('interface_action', {user: document.subject_id, action: "confirm_contract"});
         return false;
     });
 
     $('#enter_offer').click(function(event) {
-        document.socket.emit('interface_action', {data: "test offer"});
+        document.socket.emit('interface_action', {user: document.subject_id, action: "offer_entered", offer_amount: $('#offer_amount').val(), offer_type: $('input[name=offer_type]:checked').val()});
         return false;
     });
 
@@ -110,17 +123,19 @@
 </div>
 <div class="row">
     <div class="col-md-12">
+        <form class="form-inline">
+        <div class="form-group">
         <button class="btn btn-default" type="submit" id="enter_offer">Enter Offer</button>
 
         <div class="radio">
           <label>
-            <input type="radio" name="optionsRadios" id="buy_offer" value="buy" checked>
+            <input type="radio" name="offer_type" id="buy_offer" value="buy" checked>
             Buy
           </label>
         </div>
         <div class="radio">
           <label>
-            <input type="radio" name="optionsRadios" id="sell_offer" value="option2">
+            <input type="radio" name="offer_type" id="sell_offer" value="sell">
             Sell
           </label>
         </div>
@@ -133,5 +148,7 @@
         <button class="btn btn-default" type="submit" id="accept_bid">Accept Bid</button>
 
         <button class="btn btn-default" type="submit" id="confirm_contract">Confirm Contract</button>
+        </div>
+        </form>
     </div>
 </div>
